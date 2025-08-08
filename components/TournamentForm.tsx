@@ -8,6 +8,7 @@ import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Label } from "@/components/ui/label";
 import axios from "axios";
+import type { Tournament } from "@prisma/client";
 
 const schema = z.object({
   name: z.string().min(1, "Tournament name is required"),
@@ -15,24 +16,25 @@ const schema = z.object({
 
 type FormData = z.infer<typeof schema>;
 type TournamentFormProps = {
-  onTournamentAdded?: () => void;
+  onTournamentsUpdate: (tournaments: Tournament[]) => void;
 };
 
-const TournamentForm = ({ onTournamentAdded }: TournamentFormProps) => {
+const TournamentForm = ({ onTournamentsUpdate }: TournamentFormProps) => {
   const [loading, setLoading] = useState(false);
   const { register, handleSubmit, reset, formState } = useForm<FormData>({
     resolver: zodResolver(schema),
   });
 
-  const onSubmit = async (data: FormData) => {
+  const onSubmit = async (value: FormData) => {
     try {
       setLoading(true);
-      axios.post("/api/tournaments", data);
+      const { data } = await axios.post("/api/tournaments", value);
+
+      // Notify parent component to update the tournament list
+      onTournamentsUpdate(data);
 
       // Clear the input after submission
       reset();
-      // Notify parent component to update the tournament list
-      if (onTournamentAdded) onTournamentAdded();
     } catch (err) {
       console.error("Failed to add tournament:", err);
     } finally {
