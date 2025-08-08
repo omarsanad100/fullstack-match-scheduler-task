@@ -1,15 +1,29 @@
-// app/match-form/page.tsx
-import MatchList from "@/components/upcoming-match-list/MatchList";
-import prisma from "@/lib/prisma";
+"use client";
+
+import { useState, useEffect } from "react";
+import axios from "axios";
+import MatchList, {
+  type MatchWithTournament,
+} from "@/components/upcoming-match-list/MatchList";
 import Link from "next/link";
 import { ArrowLeft } from "lucide-react";
 import { buttonVariants } from "@/components/ui/button";
 
-const MatchListPage = async () => {
-  const matches = await prisma.match.findMany({
-    include: { tournament: true },
-    orderBy: { matchDate: "asc" },
-  });
+const MatchListPage = () => {
+  const [matches, setMatches] = useState<MatchWithTournament[]>([]);
+
+  const handleMatchesUpdate = (newMatches: MatchWithTournament[]) => {
+    setMatches(newMatches);
+  };
+
+  const fetchMatches = async () => {
+    const res = await axios.get("/api/matches");
+    setMatches(res.data);
+  };
+
+  useEffect(() => {
+    fetchMatches();
+  }, []);
 
   return (
     <main className="container mx-auto p-4">
@@ -22,7 +36,7 @@ const MatchListPage = async () => {
         </Link>
       </div>
 
-      <MatchList matches={matches} />
+      <MatchList matches={matches} onMatchesUpdate={handleMatchesUpdate} />
     </main>
   );
 };

@@ -39,3 +39,12 @@ export async function DELETE(req: Request) {
 
   return NextResponse.json({ success: true });
 }
+
+export async function GET() {
+  const matches = await prisma.match.findMany({
+    include: { tournament: true },
+    orderBy: { matchDate: "asc" },
+  });
+
+  return NextResponse.json(matches);
+}
