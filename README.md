@@ -1,6 +1,6 @@
 # 🚀 Fullstack Match Scheduler
 
-A modern web app to schedule and manage esports tournament matches, built with **Next.js**, **React**, **Prisma**, and **Tailwind CSS**.
+A modern web app to schedule and manage esports tournament matches, built with **Next.js**, **React**, **TypeScript**, **Prisma**, and **Tailwind CSS**.
 
 ---
 
