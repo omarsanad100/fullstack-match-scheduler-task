@@ -8,6 +8,10 @@ import type { Tournament } from "@prisma/client";
 const Home = () => {
   const [tournaments, setTournaments] = useState<Tournament[]>([]);
 
+  const handleTournamentsUpdate = (newTournaments: Tournament[]) => {
+    setTournaments(newTournaments);
+  };
+
   // Fetch tournaments from the server
   const fetchTournaments = async () => {
     const res = await axios.get("/api/tournaments");
@@ -16,6 +20,8 @@ const Home = () => {
 
   // Fetch tournaments on component mount, not on every render
   useEffect(() => {
+    console.log("Fetching tournaments...");
+
     fetchTournaments();
   }, []);
 
@@ -24,7 +30,7 @@ const Home = () => {
       <h1 className="text-3xl font-bold mb-8">
         🚀Esports Tournament Scheduler
       </h1>
-      <TournamentForm onTournamentAdded={fetchTournaments} />
+      <TournamentForm onTournamentsUpdate={handleTournamentsUpdate} />
       <ScheduleMatchSection tournaments={tournaments} />
     </main>
   );
