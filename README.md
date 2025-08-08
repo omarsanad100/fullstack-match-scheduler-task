@@ -1,36 +1,78 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# 🚀 Fullstack Match Scheduler
 
-## Getting Started
+A modern web app to schedule and manage esports tournament matches, built with **Next.js**, **React**, **Prisma**, and **Tailwind CSS**.
 
-First, run the development server:
+---
+
+## Features
+
+- **Create Tournaments:** Add new tournaments with instant validation.
+- **Schedule Matches:** Assign teams, dates, and tournaments to matches.
+- **Edit & Delete Matches:** Update or remove matches with optimistic UI for a fast experience.
+- **Live Dropdowns:** Tournament dropdown updates instantly after adding a new tournament.
+- **Responsive UI:** Clean, modern design with dark mode support.
+
+---
+
+## 🛠️ Tech Stack
+
+- **Frontend:** React 19, Next.js 15, Tailwind CSS
+- **Backend:** Next.js API routes, Prisma ORM
+- **Database:** (Configure your own with Prisma)
+- **Validation:** Zod + React Hook Form
+- **HTTP:** Axios
+- **UI:** Radix UI, Lucide Icons
+
+---
+
+## ✨ How It Works
+
+1. **State Lifting:**  
+   Tournament data is managed in the top-level `Home` component, so all parts of the app see updates instantly.
+
+2. **Callback Props:**  
+   After adding a tournament, the form calls a callback to refresh the tournament list, updating dropdowns without a page reload.
+
+3. **Optimistic UI:**  
+   When editing or deleting matches, the UI updates immediately. If the server fails, changes are reverted for consistency.
+
+4. **Validation:**  
+   All forms use Zod schemas for robust, user-friendly validation.
+
+---
+
+## 🧑‍💻 Local Development
 
 ```bash
+# 1. Install dependencies
+npm install
+
+# 2. Set up your database (see Prisma docs)
+npx prisma migrate dev
+
+# 3. Start the dev server
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+---
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+## 📁 Project Structure
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+- `/app` — Next.js pages and API routes
+- `/components` — React UI components
+- `/prisma` — Prisma schema and migrations
 
-## Learn More
+---
 
-To learn more about Next.js, take a look at the following resources:
+## 💡 Key Decisions
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+- **Axios** is used for HTTP requests for its simplicity and better error handling.
+- **State lifting** and **callback props** keep the UI in sync after data changes.
+- **Optimistic updates** make the app feel fast and responsive.
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+---
 
-## Deploy on Vercel
+## 📝 Author Notes
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+- This project demonstrates best practices in modern React and Next.js development.
+- Easily extendable for more features like authentication, notifications, or team management.
