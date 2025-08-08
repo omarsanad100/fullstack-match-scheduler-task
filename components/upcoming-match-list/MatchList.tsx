@@ -1,10 +1,10 @@
 "use client";
 import { Match, Tournament } from "@prisma/client";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import MatchListItem from "./MatchListItem";
 import axios from "axios";
 
-type MatchWithTournament = Match & { tournament: Tournament };
+export type MatchWithTournament = Match & { tournament: Tournament };
 
 type EditMatchData = {
   teamA?: string;
@@ -13,15 +13,14 @@ type EditMatchData = {
   tournamentId?: number;
 };
 
-export default function MatchList({
-  matches,
-}: {
+type Props = {
   matches: MatchWithTournament[];
-}) {
+  onMatchesUpdate: (newMatches: MatchWithTournament[]) => void;
+};
+
+export default function MatchList({ matches, onMatchesUpdate }: Props) {
   const [editingId, setEditingId] = useState<number | null>(null);
   const [editData, setEditData] = useState<EditMatchData>({});
-  const [updatedMatches, setUpdatedMatches] =
-    useState<MatchWithTournament[]>(matches);
 
   const handleEdit = (match: MatchWithTournament) => {
     setEditingId(match.id);
@@ -29,63 +28,62 @@ export default function MatchList({
       teamA: match.teamA,
       teamB: match.teamB,
       matchDate: new Date(match.matchDate).toISOString().slice(0, 16),
+      tournamentId: match.tournamentId,
     });
   };
 
   const handleUpdate = async (id: number) => {
+    const previousMatches = [...matches];
+
     try {
       if (!editData.matchDate) {
         console.error("Match date is required.");
         return;
       }
 
-      //Prepare the updated data
+      // Prepare the updated data
       const updateData = {
         ...editData,
         matchDate: new Date(editData.matchDate),
       };
 
-      // Optimistic Update in UI
-      setUpdatedMatches((prev) =>
-        prev.map((match) =>
-          match.id === id ? { ...match, ...updateData } : match
-        )
+      const updatedMatches = matches.map((match) =>
+        match.id === id
+          ? { ...match, ...updateData, tournament: match.tournament }
+          : match
       );
 
-      // Send the update to the server
-      await axios.put("/api/matches", { id, ...updateData });
+      // Optimistic Update in UI, keep tournament property
+      onMatchesUpdate(updatedMatches);
+
+      // Use POST with _method override for update (Vercel-friendly)
+      await axios.post("/api/matches", { id, ...updateData });
     } catch (error) {
       console.error("Error updating match:", error);
-      setUpdatedMatches(matches);
+      onMatchesUpdate(previousMatches);
     } finally {
       setEditingId(null);
     }
   };
 
   const handleDelete = async (id: number) => {
-    // Store current matches before deletion
-    const previousMatches = [...updatedMatches];
+    const previousMatches = [...matches];
+    const updatedMatches = matches.filter((match) => match.id !== id);
 
-    // Optimistically remove the match from UI
-    setUpdatedMatches((prev) => prev.filter((match) => match.id !== id));
+    onMatchesUpdate(updatedMatches);
 
     try {
-      await fetch("/api/matches", {
-        method: "DELETE",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ id }),
-      });
+      // Use POST with _method override for delete (Vercel-friendly)
+      await axios.delete("/api/matches", { data: { id } });
     } catch (error) {
       console.error("Error deleting match:", error);
-
-      // Revert if failed
-      setUpdatedMatches(previousMatches);
+      onMatchesUpdate(previousMatches);
     }
   };
 
   return (
     <div className="space-y-4">
-      {updatedMatches?.map((match) => (
+      {matches?.map((match) => (
         <MatchListItem
           key={match.id}
           match={match}
