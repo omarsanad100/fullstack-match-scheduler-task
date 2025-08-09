@@ -5,7 +5,7 @@ import ScheduleMatchSection from "@/components/ScheduleMatchSection";
 import TournamentForm from "@/components/TournamentForm";
 import type { Tournament } from "@prisma/client";
 
-const Home = () => {
+const Schedular = () => {
   const [tournaments, setTournaments] = useState<Tournament[]>([]);
 
   const handleTournamentsUpdate = (newTournaments: Tournament[]) => {
@@ -36,4 +36,4 @@ const Home = () => {
   );
 };
 
-export default Home;
+export default Schedular;
