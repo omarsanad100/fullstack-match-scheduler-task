@@ -3,12 +3,14 @@ import { useState } from "react";
 import type { Tournament } from "@prisma/client";
 import MatchFormUI from "./MatchFormUI";
 import axios from "axios";
+import { useRouter } from "next/navigation";
 
 type MatchFormProps = {
   tournaments: Tournament[];
 };
 
 const MatchForm = ({ tournaments }: MatchFormProps) => {
+  const router = useRouter();
   const [formData, setFormData] = useState({
     teamA: "",
     teamB: "",
@@ -27,6 +29,9 @@ const MatchForm = ({ tournaments }: MatchFormProps) => {
       matchDate: "",
       tournamentId: tournaments[0]?.id.toString() || "",
     });
+
+    // re-direct to matches page
+    router.push("/");
   };
 
   return (
