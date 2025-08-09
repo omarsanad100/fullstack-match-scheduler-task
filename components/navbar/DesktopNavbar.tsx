@@ -7,13 +7,13 @@ const DesktopNavbar = async () => {
   return (
     <nav className="hidden lg:flex items-center justify-end gap-4 w-full">
       <div className="flex items-center gap-4">
-        <Link href="/match-list">
+        <Link href="/">
           <Button
             variant="ghost"
             className="flex items-center gap-2 px-4 py-2 hover:text-primary transition cursor-pointer"
           >
             <HomeIcon className="h-5 w-5" />
-            <span className="text-sm font-medium">Scheduler</span>
+            {/* <span className="text-sm font-medium">Matches</span> */}
           </Button>
         </Link>
       </div>
