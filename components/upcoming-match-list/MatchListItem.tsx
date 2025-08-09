@@ -22,7 +22,7 @@ type Props = {
   handleDelete: (id: number) => void;
 };
 
-export default function MatchListItem({
+const MatchListItem = ({
   match,
   editingId,
   editData,
@@ -31,7 +31,7 @@ export default function MatchListItem({
   handleEdit,
   handleUpdate,
   handleDelete,
-}: Props) {
+}: Props) => {
   return (
     <div className="rounded-lg border p-4 shadow-sm bg-white dark:bg-gray-900">
       {editingId === match.id ? (
@@ -109,4 +109,6 @@ export default function MatchListItem({
       )}
     </div>
   );
-}
+};
+
+export default MatchListItem;
