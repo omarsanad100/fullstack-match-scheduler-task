@@ -1,8 +1,9 @@
 "use client";
-import { Match, Tournament } from "@prisma/client";
-import { useState, useEffect } from "react";
-import MatchListItem from "./MatchListItem";
+import { useState } from "react";
 import axios from "axios";
+import { Match, Tournament } from "@prisma/client";
+import MatchListItem from "./MatchListItem";
+import { dummyMatches } from "./dummyMatches";
 
 export type MatchWithTournament = Match & { tournament: Tournament };
 
@@ -18,7 +19,7 @@ type Props = {
   onMatchesUpdate: (newMatches: MatchWithTournament[]) => void;
 };
 
-export default function MatchList({ matches, onMatchesUpdate }: Props) {
+const MatchList = ({ matches, onMatchesUpdate }: Props) => {
   const [editingId, setEditingId] = useState<number | null>(null);
   const [editData, setEditData] = useState<EditMatchData>({});
 
@@ -41,23 +42,21 @@ export default function MatchList({ matches, onMatchesUpdate }: Props) {
         return;
       }
 
-      // Prepare the updated data
       const updateData = {
         ...editData,
         matchDate: new Date(editData.matchDate),
       };
 
+      // Optimistic update
       const updatedMatches = matches.map((match) =>
         match.id === id
           ? { ...match, ...updateData, tournament: match.tournament }
           : match
       );
 
-      // Optimistic Update in UI, keep tournament property
       onMatchesUpdate(updatedMatches);
 
-      // Use POST with _method override for update (Vercel-friendly)
-      await axios.post("/api/matches", { id, ...updateData });
+      await axios.put("/api/matches", { id, ...updateData });
     } catch (error) {
       console.error("Error updating match:", error);
       onMatchesUpdate(previousMatches);
@@ -73,7 +72,6 @@ export default function MatchList({ matches, onMatchesUpdate }: Props) {
     onMatchesUpdate(updatedMatches);
 
     try {
-      // Use POST with _method override for delete (Vercel-friendly)
       await axios.delete("/api/matches", { data: { id } });
     } catch (error) {
       console.error("Error deleting match:", error);
@@ -81,9 +79,11 @@ export default function MatchList({ matches, onMatchesUpdate }: Props) {
     }
   };
 
+  const displayDummyMatches = matches.length === 0 ? dummyMatches : matches;
+
   return (
     <div className="space-y-4">
-      {matches?.map((match) => (
+      {displayDummyMatches?.map((match) => (
         <MatchListItem
           key={match.id}
           match={match}
@@ -98,4 +98,6 @@ export default function MatchList({ matches, onMatchesUpdate }: Props) {
       ))}
     </div>
   );
-}
+};
+
+export default MatchList;
