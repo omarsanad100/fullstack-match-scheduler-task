@@ -41,7 +41,7 @@ export default function RootLayout({
             <main className="py-8 ">
               {/* Container to center the content */}
               <div className="max-w-7xl mx-auto px-4">
-                <div className="grid grid-cols-1 lg:grid-cols-12 gap-6">
+                <div className="flex flex-col gap-6">
                   <div className="lg:col-span-9">{children}</div>
                 </div>
               </div>
