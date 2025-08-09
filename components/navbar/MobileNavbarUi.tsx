@@ -46,13 +46,13 @@ const MobileNavbarUi = ({
 
       <nav className="mt-6 flex flex-col space-y-4">
         <Link
-          href="/match-list"
+          href="/"
           onClick={closeMobileMenu}
           className="flex items-center text-gray-800 dark:text-gray-100 transition "
         >
           <Button className="bg-transparent text-black dark:text-white hover:bg-white/80 dark:hover:bg-black/30 cursor-pointer w-[100%]">
             <HomeIcon className="w-5 h-5 mr-2 " />
-            Scheduler
+            Matches
           </Button>
         </Link>
 
