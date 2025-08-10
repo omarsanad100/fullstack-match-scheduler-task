@@ -18,7 +18,10 @@ const MatchForm = ({ tournaments }: MatchFormProps) => {
     tournamentId: tournaments[0]?.id.toString() || "",
   });
 
+  const [loading, setLoading] = useState(false);
+
   const handleSubmit = async (e: React.FormEvent) => {
+    setLoading(true);
     e.preventDefault();
 
     await axios.post("/api/matches", formData);
@@ -32,6 +35,7 @@ const MatchForm = ({ tournaments }: MatchFormProps) => {
 
     // re-direct to matches page
     router.push("/");
+    setLoading(false);
   };
 
   return (
@@ -40,6 +44,7 @@ const MatchForm = ({ tournaments }: MatchFormProps) => {
       formData={formData}
       setFormData={setFormData}
       handleSubmit={handleSubmit}
+      loading={loading}
     />
   );
 };

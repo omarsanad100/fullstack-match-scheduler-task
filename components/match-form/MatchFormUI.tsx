@@ -30,6 +30,7 @@ interface MatchFormUIProps {
     }>
   >;
   handleSubmit: (e: React.FormEvent) => void;
+  loading: boolean;
 }
 
 const MatchFormUI = ({
@@ -37,6 +38,7 @@ const MatchFormUI = ({
   formData,
   setFormData,
   handleSubmit,
+  loading,
 }: MatchFormUIProps) => {
   return (
     <form onSubmit={handleSubmit} className="mb-8">
@@ -96,8 +98,8 @@ const MatchFormUI = ({
           </Select>
         </div>
       </div>
-      <Button className="cursor-pointer" type="submit">
-        Add Match
+      <Button className="cursor-pointer" type="submit" disabled={loading}>
+        {loading ? "Adding..." : "Add Match"}
       </Button>
     </form>
   );
