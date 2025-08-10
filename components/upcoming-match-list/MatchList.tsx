@@ -3,7 +3,7 @@ import { useState } from "react";
 import axios from "axios";
 import { Match, Tournament } from "@prisma/client";
 import MatchListItem from "./MatchListItem";
-import { dummyMatches } from "./dummyMatches";
+import NoMatchesMessage from "./NoMatchesMessage";
 
 export type MatchWithTournament = Match & { tournament: Tournament };
 
@@ -79,11 +79,13 @@ const MatchList = ({ matches, onMatchesUpdate }: Props) => {
     }
   };
 
-  const displayDummyMatches = matches.length === 0 ? dummyMatches : matches;
+  if (matches.length === 0) {
+    return <NoMatchesMessage />;
+  }
 
   return (
     <div className="space-y-4">
-      {displayDummyMatches?.map((match) => (
+      {matches?.map((match) => (
         <MatchListItem
           key={match.id}
           match={match}
